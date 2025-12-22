@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BookRepository {
-    private Map<Integer, Book> books=new HashMap<>();
+    private static Map<Integer, Book> books=new HashMap<>();
 
     public void addBook(Book book){
         books.put(book.getId(),book);

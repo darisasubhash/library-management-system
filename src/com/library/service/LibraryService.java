@@ -54,8 +54,13 @@ public class LibraryService {
         record.getBook().setAvailable(true);
         int fine=FineCalculator.calculateFine(record.getIssueDate(),record.getReturnDate());
 
-        System.out.println("Book returned successfully");
-        System.out.println("Fine to be paid is:"+fine);
+        if(fine>=0){
+            System.out.println("Book returned successfully");
+            System.out.println("Fine to be paid is:"+fine);
+        }
+        else{
+            System.out.println("Pleasure enter the valid dates");
+        }
 
 
     }
