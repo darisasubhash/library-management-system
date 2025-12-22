@@ -22,16 +22,15 @@ public class LibraryService {
         this.userRepo = userRepo;
     }
 
-    public void issueBook(int bookId, int userId, LocalDate issueDate){
+    public void issueBook(int bookId, int userId){
         Book book=bookRepo.getBook(bookId);
         User user=userRepo.getUser(userId);
-
-        if(book==null ){
-            System.out.println("Invalid Book or Book is not Present");
-            return;
-        }
         if(user==null ){
             System.out.println("Invalid User or User is not Present");
+            return;
+        }
+        if(book==null ){
+            System.out.println("Invalid Book or Book is not Present");
             return;
         }
         if(!book.isAvailable()){
@@ -39,30 +38,27 @@ public class LibraryService {
             return;
         }
         book.setAvailable(false);
-        IssueRecord record=new IssueRecord(user, book, issueDate);
+        IssueRecord record=new IssueRecord(user, book);
         issueRepo.addRecord(record);
         System.out.println("Book issued  to "+user.getUserName());
 
     }
-    public void returnBook(int bookId,LocalDate returDate){
-        IssueRecord record=issueRepo.findActiveRecordByBookId(bookId);
-        if(record==null){
-            System.out.println("No issue record found");
+    public void returnBook(int userId) {
+
+        if (userRepo.getUser(userId) == null) {
+            System.out.println("User is not Present");
             return;
         }
-        record.setReturnDate(returDate);
+        IssueRecord record = issueRepo.getActiveIssueByUserId(userId);
+        if (record == null) {
+            System.out.println("No active issued book for this user");
+            return;
+        }
+        record.setReturnDate(LocalDate.now());
         record.getBook().setAvailable(true);
-        int fine=FineCalculator.calculateFine(record.getIssueDate(),record.getReturnDate());
-
-        if(fine>=0){
-            System.out.println("Book returned successfully");
-            System.out.println("Fine to be paid is:"+fine);
-        }
-        else{
-            System.out.println("Pleasure enter the valid dates");
-        }
-
-
+        System.out.println("Book returned successfully");
+        System.out.println("User name is : " + record.getUser().getUserName());
+        System.out.println("Book: " + record.getBook().getTitle());
     }
 
 }

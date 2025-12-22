@@ -23,4 +23,14 @@ public class IssueRepository {
     public List<IssueRecord> getRecords() {
         return records;
     }
+
+    public IssueRecord getActiveIssueByUserId(int userId) {
+
+        for (IssueRecord record : records) {
+            if (record.getUser().getUserId() == userId && record.getReturnDate()==null) {
+                return record;
+            }
+        }
+        return null;
+    }
 }

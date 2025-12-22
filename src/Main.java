@@ -32,19 +32,16 @@ public class Main {
         userRepo.addUser(user2);
 
 
-        libraryService.issueBook(1, 101, LocalDate.of(2025,1,14));
-        libraryService.returnBook(1,LocalDate.of(2025,1,14));
+        libraryService.issueBook(2, 101);
+        libraryService.issueBook(1, 101);
+        libraryService.returnBook(101);
+        libraryService.returnBook(101);
+        libraryService.returnBook(103);
         Collection<Book> books =bookRepo.getAllBooks();
         System.out.println("List of Books present in Library");
         for(Book book:books){
             System.out.println("Book id ="+ book.getId());
             System.out.println("Book Title ="+book.getTitle());
         }
-
-
-
-
-
-
     }
 }

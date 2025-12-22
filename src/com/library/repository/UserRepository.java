@@ -15,4 +15,7 @@ public class UserRepository {
     public User getUser(int id){
         return users.get(id);
     }
+    public boolean userExists(int userId) {
+        return users.containsKey(userId);
+    }
 }

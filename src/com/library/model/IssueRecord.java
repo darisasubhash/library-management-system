@@ -8,10 +8,10 @@ public class IssueRecord {
     private LocalDate issueDate;
     private LocalDate returnDate;
 
-    public IssueRecord(User user, Book book, LocalDate issueDate) {
+    public IssueRecord(User user, Book book) {
         this.user = user;
         this.book = book;
-        this.issueDate = issueDate;
+        this.issueDate = LocalDate.now();
     }
 
     public User getUser() {
