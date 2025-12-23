@@ -22,7 +22,7 @@ public class LibraryService {
         this.userRepo = userRepo;
     }
 
-    public void issueBook(int bookId, int userId){
+    public void issueBook(int userId, int bookId){
         Book book=bookRepo.getBook(bookId);
         User user=userRepo.getUser(userId);
         if(user==null ){
@@ -59,6 +59,8 @@ public class LibraryService {
         System.out.println("Book returned successfully");
         System.out.println("User name is : " + record.getUser().getUserName());
         System.out.println("Book: " + record.getBook().getTitle());
+        int fine=FineCalculator.calculateFine(record.getIssueDate(),record.getReturnDate());
+        System.out.println("Fine to be paid is : "+fine);
     }
 
 }

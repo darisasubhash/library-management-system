@@ -8,40 +8,75 @@ import com.library.service.LibraryService;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Scanner;
 
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-
-        System.out.println("Hello and welcome to the library management system!");
-
         BookRepository bookRepo=new BookRepository();
         IssueRepository issueRepo=new IssueRepository();
         UserRepository userRepo=new UserRepository();
         LibraryService libraryService=new LibraryService(bookRepo,issueRepo,userRepo);
-        Book firstBook=new Book(1,"Programming in Java", BookType.TECHNOLOGY);
-        Book secondBook=new Book(2,"Maha Bharatham",BookType.HISTORY);
-        bookRepo.addBook(firstBook);
-        bookRepo.addBook(secondBook);
-        User user1=new User(101, "Subhash");
-        User user2=new User(102, "Danny");
+        Scanner scanner=new Scanner(System.in);
 
-        userRepo.addUser(user1);
-        userRepo.addUser(user2);
+        while(true){
+            System.out.println("Hello and welcome to the library management system!");
+            System.out.println("Enter 1 to Add User");
+            System.out.println("Enter 2 to Add Book");
+            System.out.println("Enter 3 to Issue Book");
+            System.out.println("Enter 4 to Return Book");
+            System.out.println("Enter 5 to Exit");
+            System.out.print("Enter your choice: ");
+            int number=scanner.nextInt();
+            switch (number){
+                case 1:
+                    System.out.println("Enter user id");
+                    int userId=scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter the username");
+                    String userName=scanner.nextLine();
+                    userRepo.addUser(new User(userId,userName));
+                    System.out.println("User added Successfully");
+                    break;
+                case 2:
+                    System.out.println("Enter Book id");
+                    int bookId=scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("Enter Book Title");
+                    String bookTitle=scanner.nextLine();
 
-
-        libraryService.issueBook(2, 101);
-        libraryService.issueBook(1, 101);
-        libraryService.returnBook(101);
-        libraryService.returnBook(101);
-        libraryService.returnBook(103);
-        Collection<Book> books =bookRepo.getAllBooks();
-        System.out.println("List of Books present in Library");
-        for(Book book:books){
-            System.out.println("Book id ="+ book.getId());
-            System.out.println("Book Title ="+book.getTitle());
+                    BookType bookType = null;
+                    while (bookType == null) {
+                        System.out.println("Enter Book type ( FICTION / NON_FICTION / SCIENCE / HISTORY / TECHNOLOGY / MATHEMATICS / COMEDY / OTHER )");
+                        try {
+                            bookType = BookType.fromString(scanner.nextLine());
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Invalid book type reenter book type again.");
+                        }
+                    }
+                    bookRepo.addBook(new Book(bookId,bookTitle,bookType));
+                    System.out.println("Book added Successfully");
+                    break;
+                case 3:
+                    System.out.println("Enter use id ");
+                    int issueUserId=scanner.nextInt();
+                    System.out.println("Enter Book id");
+                    int issueBookId=scanner.nextInt();
+                    libraryService.issueBook(issueUserId,issueBookId);
+                    break;
+                case 4:
+                    System.out.println("Enter User id");
+                    int returnUserId=scanner.nextInt();
+                    libraryService.returnBook(returnUserId);
+                    break;
+                case 5:
+                    System.out.println("Exiting Library Management System");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid Choice");
+            }
         }
     }
 }

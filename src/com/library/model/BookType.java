@@ -10,4 +10,13 @@ public enum BookType {
     COMEDY,
     OTHER;
 
+    public static BookType fromString(String input){
+        for(BookType type:values()){
+            if(type.name().equalsIgnoreCase(input)){
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Invalid Book Type");
+    }
+
 }
