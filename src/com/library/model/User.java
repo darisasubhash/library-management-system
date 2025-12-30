@@ -1,7 +1,7 @@
 package com.library.model;
 
 public class User {
-    private int userId;
+    private final int userId;
     private String userName;
 
     public User(int userId, String userName) {

@@ -1,7 +1,4 @@
-import com.library.exception.BookNotFoundException;
-import com.library.exception.DuplicateException;
-import com.library.exception.NoActiveIssueException;
-import com.library.exception.UserNotFoundException;
+import com.library.exception.*;
 import com.library.model.Book;
 import com.library.model.BookType;
 import com.library.model.User;
@@ -72,7 +69,7 @@ public class Main {
                     try{
                         libraryService.issueBook(issueUserId,issueBookId);
                     }
-                    catch (BookNotFoundException | UserNotFoundException e) {
+                    catch (BookNotFoundException | UserNotFoundException | BookNotAvailableException e) {
                         System.out.println(e.getMessage());
                     }
 
