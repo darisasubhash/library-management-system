@@ -1,5 +1,9 @@
 package com.library.service;
 
+import com.library.exception.BookNotAvailableException;
+import com.library.exception.BookNotFoundException;
+import com.library.exception.NoActiveIssueException;
+import com.library.exception.UserNotFoundException;
 import com.library.model.Book;
 import com.library.model.IssueRecord;
 import com.library.model.User;
@@ -26,16 +30,13 @@ public class LibraryService {
         Book book=bookRepo.getBook(bookId);
         User user=userRepo.getUser(userId);
         if(user==null ){
-            System.out.println("Invalid User or User is not Present");
-            return;
+            throw new UserNotFoundException("User with ID " + userId + " not found");
         }
         if(book==null ){
-            System.out.println("Invalid Book or Book is not Present");
-            return;
+            throw new BookNotFoundException("Book with ID " + bookId + " not found");
         }
         if(!book.isAvailable()){
-            System.out.println("Book is already issued");
-            return;
+            throw new BookNotAvailableException("Book is already issued");
         }
         book.setAvailable(false);
         IssueRecord record=new IssueRecord(user, book);
@@ -46,13 +47,11 @@ public class LibraryService {
     public void returnBook(int userId) {
 
         if (userRepo.getUser(userId) == null) {
-            System.out.println("User is not Present");
-            return;
+            throw new UserNotFoundException("User with ID " + userId + " not found");
         }
         IssueRecord record = issueRepo.getActiveIssueByUserId(userId);
         if (record == null) {
-            System.out.println("No active issued book for this user");
-            return;
+            throw new NoActiveIssueException("No active issued book found for user ID " + userId);
         }
         record.setReturnDate(LocalDate.now());
         record.getBook().setAvailable(true);

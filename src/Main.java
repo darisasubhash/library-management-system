@@ -1,3 +1,7 @@
+import com.library.exception.BookNotFoundException;
+import com.library.exception.DuplicateException;
+import com.library.exception.NoActiveIssueException;
+import com.library.exception.UserNotFoundException;
 import com.library.model.Book;
 import com.library.model.BookType;
 import com.library.model.User;
@@ -5,14 +9,8 @@ import com.library.repository.BookRepository;
 import com.library.repository.IssueRepository;
 import com.library.repository.UserRepository;
 import com.library.service.LibraryService;
-
-import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Scanner;
 
-
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
         BookRepository bookRepo=new BookRepository();
@@ -37,8 +35,12 @@ public class Main {
                     scanner.nextLine();
                     System.out.print("Enter the username");
                     String userName=scanner.nextLine();
-                    userRepo.addUser(new User(userId,userName));
-                    System.out.println("User added Successfully");
+                    try{
+                        userRepo.addUser(new User(userId,userName));
+                        System.out.println("User added Successfully");
+                    } catch (DuplicateException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 2:
                     System.out.println("Enter Book id");
@@ -46,7 +48,6 @@ public class Main {
                     scanner.nextLine();
                     System.out.println("Enter Book Title");
                     String bookTitle=scanner.nextLine();
-
                     BookType bookType = null;
                     while (bookType == null) {
                         System.out.println("Enter Book type ( FICTION / NON_FICTION / SCIENCE / HISTORY / TECHNOLOGY / MATHEMATICS / COMEDY / OTHER )");
@@ -56,20 +57,34 @@ public class Main {
                             System.out.println("Invalid book type reenter book type again.");
                         }
                     }
-                    bookRepo.addBook(new Book(bookId,bookTitle,bookType));
-                    System.out.println("Book added Successfully");
+                    try{
+                        bookRepo.addBook(new Book(bookId,bookTitle,bookType));
+                        System.out.println("Book added Successfully");
+                    } catch (DuplicateException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 3:
                     System.out.println("Enter use id ");
                     int issueUserId=scanner.nextInt();
                     System.out.println("Enter Book id");
                     int issueBookId=scanner.nextInt();
-                    libraryService.issueBook(issueUserId,issueBookId);
+                    try{
+                        libraryService.issueBook(issueUserId,issueBookId);
+                    }
+                    catch (BookNotFoundException | UserNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+
                     break;
                 case 4:
                     System.out.println("Enter User id");
                     int returnUserId=scanner.nextInt();
-                    libraryService.returnBook(returnUserId);
+                    try{
+                        libraryService.returnBook(returnUserId);
+                    } catch (UserNotFoundException | NoActiveIssueException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 5:
                     System.out.println("Exiting Library Management System");
